@@ -7,7 +7,7 @@
 
     <v-flex v-if="fetching" xs12 sm8 md6>
       <v-skeleton-loader
-        v-for="(item, i) in mockItems"
+        v-for="(item, i) in 10"
         :key="i"
         class="mx-auto pa-2"
         width="300"
@@ -15,7 +15,7 @@
       ></v-skeleton-loader>
     </v-flex>
 
-    <v-flex ref="mylist" class="js-disabled" xs12 sm8 md6>
+    <v-flex ref="mylist" xs12 sm8 md6>
       <v-list three-line>
         <v-list-item v-for="(item, i) in items" :key="i">
           <v-list-item-content>
@@ -61,9 +61,9 @@ export default {
       this.mockItems = Array.from({ length: 100 })
       this.items = []
 
-      const res = await fetch(
-        'https://jsonplaceholder.typicode.com/posts'
-      ).then((response) => response.json())
+      const res = await fetch('https://jsonplaceholder.typicode.com/posts')
+        .then((response) => response.json())
+        .catch(() => Array.from(posts))
 
       await delay(3000)
 
