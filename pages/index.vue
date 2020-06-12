@@ -47,27 +47,37 @@ export default {
   },
 
   mounted() {
+    this.$on('fetchstart', this.onfetchstart)
+    this.$on('fetch', this.onfetch)
+    this.$on('show', this.onshow)
+
     // hide mock list and show real list
-    setTimeout(() => {
-      this.$refs.mylist.classList.remove('js-disabled')
-      this.mockItems = []
-    }, 4000)
+    setTimeout(this.onshow, 4000)
   },
 
   methods: {
     async fetch() {
       if (this.fetching) return
 
-      this.mockItems = Array.from({ length: 100 })
-      this.items = []
+      this.$emit('fetchstart')
 
       const res = await fetch('https://jsonplaceholder.typicode.com/posts')
         .then((response) => response.json())
         .catch(() => Array.from(posts))
-
       await delay(3000)
 
+      this.$emit('fetch', res)
+    },
+    onfetchstart() {
+      this.mockItems = Array.from({ length: 10 })
+      this.items = []
+    },
+    onfetch(res) {
       this.items = res
+      this.mockItems = []
+    },
+    onshow() {
+      this.$refs.mylist.classList.remove('js-disabled')
       this.mockItems = []
     }
   }
